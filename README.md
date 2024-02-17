@@ -18,6 +18,15 @@ npm run build
 
 The built files will be in the `dist` directory, and can be served using any web server.
 
+## Developer mode commands
+
+### Keyboard Shortcuts
+
+- **d**: Show debug UI for the physics engine
+- **1-9**: Spawn bears from a chute
+- **b**: Toggle the box in and off the screen
+- **x**: Clear all bears
+
 ## Credits
 
 Developed by [Eric Londaits](https://github.com/elondaits) for 

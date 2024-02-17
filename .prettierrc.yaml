@@ -2,5 +2,5 @@ tabWidth: 2
 useTabs: false
 quoteProps: consistent
 singleQuote: true
-trailingComma: all
+trailingComma: es5
 proseWrap: always

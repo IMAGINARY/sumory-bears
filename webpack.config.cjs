@@ -79,5 +79,7 @@ module.exports = {
   ],
   mode: 'development',
   // Todo: change the source map settings for production builds
+  // See: https://github.com/liabru/matter-js/issues/1001
+  // TL;DR: Use of devtool: 'source-map' recommended for matter.js in development
   devtool: 'source-map',
 };

@@ -1,0 +1,7 @@
+.summy-bears {
+  &.with-debug {
+    canvas {
+      transform: scale(0.75);
+    }
+  }
+}

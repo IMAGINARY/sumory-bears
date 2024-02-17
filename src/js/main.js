@@ -1,3 +1,8 @@
 require('../sass/default.scss');
+const SummyBearsApp = require('./lib/SummyBearsApp');
 
-console.log('Hello World');
+const config = {};
+$('[data-component="SummyBears"]').each(function () {
+  const app = new SummyBearsApp(config);
+  this.replaceWith(app.getHtmlElement());
+});
