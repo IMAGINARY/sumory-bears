@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29">
+  <g id="c" data-name="Layer 2">
+    <g>
+      <circle cx="14.5" cy="14.5" r="13.5" fill="#fe0" stroke-width="0"/>
+      <path d="M14.5,2c6.904,0,12.5,5.596,12.5,12.5s-5.596,12.5-12.5,12.5S2,21.404,2,14.5,7.596,2,14.5,2M14.5,0C6.505,0,0,6.505,0,14.5s6.505,14.5,14.5,14.5,14.5-6.505,14.5-14.5S22.495,0,14.5,0h0Z" fill="#ea5b0c" stroke-width="0"/>
+    </g>
+  </g>
+</svg>

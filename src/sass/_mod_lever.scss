@@ -1,0 +1,132 @@
+.lever {
+  position: relative;
+  cursor: pointer;
+
+  .lever-body, .lever-handle, .lever-shadow, .lever-knob, .lever-text, .lever-event-mask {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .lever-body {
+    background-image: url('../../static/img/lever/body.svg');
+    width: 51px;
+    height: 84px;
+  }
+
+  .lever-handle {
+    background-image: url('../../static/img/lever/handle.svg');
+    width: 50px;
+    height: 10px;
+    right: -28px;
+    top: 37px;
+    transform-origin: 100% 50%;
+    transform: rotate(35deg);
+  }
+
+  .lever-shadow {
+    background-image: url('../../static/img/lever/shadow.svg');
+    width: 6px;
+    height: 40px;
+    bottom: -66px;
+    right: -31px;
+  }
+
+  .lever-knob {
+    background-image: url('../../static/img/lever/knob.svg');
+    width: 33px;
+    height: 33px;
+    bottom: -56px;
+    right: -43px;
+    transform: rotate(35deg) translate(-54px, 1px);
+  }
+
+  .lever-text {
+    top: -44px;
+    left: 1px;
+    text-align: center;
+    width: 44px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    animation: hide-text 0.3s ease-in forwards;
+    user-select: none;
+  }
+
+  .lever-event-mask {
+    background-color: transparent;
+    width: 120px;
+    height: 140px;
+    top: -40px;
+    left: -40px;
+  }
+
+  @keyframes lever-down-handle {
+    0% { transform: rotate(35deg); }
+    100% { transform: rotate(-35deg); }
+  }
+
+  @keyframes lever-up-handle {
+    0% { transform: rotate(-35deg); }
+    100% { transform: rotate(35deg); }
+  }
+
+  @keyframes lever-down-knob {
+    0% { transform: rotate(35deg) translate(-54px, 1px); }
+    100% { transform: rotate(-35deg) translate(-54px, 1px); }
+  }
+
+  @keyframes lever-up-knob {
+    0% { transform: rotate(-35deg) translate(-54px, 1px); }
+    100% { transform: rotate(35deg) translate(-54px, 1px); }
+  }
+
+  &.lever-up {
+    .lever-handle {
+      animation: lever-up-handle 0.3s ease-in-out forwards;
+    }
+
+    .lever-knob {
+      animation: lever-up-knob 0.3s ease-in-out forwards;
+    }
+  }
+
+  &.lever-down {
+    .lever-handle {
+      animation: lever-down-handle 0.3s ease-in-out forwards;
+    }
+
+    .lever-knob {
+      animation: lever-down-knob 0.3s ease-in-out forwards;
+    }
+  }
+
+  @keyframes hide-text {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes text-appears {
+    0% {
+      transform: scale(0);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  &.with-text {
+   .lever-text {
+     opacity: 1;
+     transform-origin: 50% 100%;
+     animation: text-appears 0.3s ease-in forwards;
+   }
+  }
+}
