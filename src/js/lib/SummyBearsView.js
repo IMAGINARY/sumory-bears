@@ -5,6 +5,7 @@ const bearTextureOrange = require('../../../static/img/sp-bear-orange.png');
 const bearTextureStrawberry = require('../../../static/img/sp-bear-strawberry.png');
 const bearTextureGrape = require('../../../static/img/sp-bear-grape.png');
 const Lever = require('./ui/lever');
+const RotaryCounter = require('./ui/rotary-counter');
 
 class SummyBearsView {
   constructor(config) {
@@ -20,6 +21,11 @@ class SummyBearsView {
     this.$uiContainer = $('<div class="ui-container">');
     this.$element.append(this.$uiContainer);
 
+    this.lever1 = new Lever();
+    this.lever1.$element.addClass('lever-1').appendTo(this.$uiContainer);
+
+    this.counter = new RotaryCounter(3);
+    this.counter.$element.appendTo(this.$uiContainer);
 
     this.transparentBodies = this.config?.matter?.transparentBodies;
 
@@ -121,8 +127,6 @@ class SummyBearsView {
       mass: 100,
       isStatic: true,
     });
-
-    window.box = this.worldObjects.box;
 
     // Create chutes
     const chuteXs = Array.from(
@@ -284,7 +288,7 @@ class SummyBearsView {
       if (!bear.counted && bear.body.position.y > this.countThreshold) {
         bear.counted = true;
         this.bearCount += 1;
-        console.log(`Bear count: ${this.bearCount}`);
+        this.counter.setTarget(this.bearCount);
       }
 
       if (this.bearIsOutOfBounds(bear)) {

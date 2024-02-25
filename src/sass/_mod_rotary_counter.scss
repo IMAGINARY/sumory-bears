@@ -1,0 +1,47 @@
+$step-height: 1em;
+$step-width: 1em;
+$step-margin: 0.1em;
+
+.rotary-counter {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  height: $step-height + 2 * $step-margin;
+  font-size: 2.75rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.rotary-counter-slot {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+}
+
+.rotary-counter-slot-step {
+  background-color: white;
+  width: $step-width;
+  height: $step-height;
+  text-align: center;
+  line-height: 1;
+  margin: $step-margin $step-margin;
+}
+
+.rotary-counter-slot.animate-odd {
+  animation: rotate-odd 0.15s ease-in-out;
+}
+
+.rotary-counter-slot.animate-even {
+  animation: rotate-even 0.15s ease-in-out;
+}
+
+@keyframes rotate-odd {
+  0% { margin-top: 0 }
+  100% { margin-top: -1 * ($step-height + $step-margin * 2); }
+}
+
+// We need two sets of keyframes to be able to restart the animation reliably
+@keyframes rotate-even {
+  0% { margin-top: 0 }
+  100% { margin-top: -1 * ($step-height + $step-margin * 2); }
+}
