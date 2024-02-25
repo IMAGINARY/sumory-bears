@@ -1,7 +1,48 @@
 .summy-bears {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+
   &.with-debug {
+    transform: scale(0.75);
+  }
+
+  .bg-image,
+  .fg-image,
+  .matter-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .bg-image {
+    background-color: $c-orange;
+    background-image: url('../../static/img/factory-bg.svg');
+  }
+
+  .fg-image {
+    background-image: url('../../static/img/factory-fg.svg');
+  }
+
+  .matter-container {
     canvas {
-      transform: scale(0.75);
+      display: block;
+    }
+  }
+
+  .ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .lever-1 {
+      position: absolute;
+      bottom: 120px;
+      left: 120px;
     }
   }
 }

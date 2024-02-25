@@ -1,10 +1,28 @@
 /* globals Matter, MatterTools */
+const bearTextureApple = require('../../../static/img/sp-bear-apple.png');
+const bearTextureLemon = require('../../../static/img/sp-bear-lemon.png');
+const bearTextureOrange = require('../../../static/img/sp-bear-orange.png');
+const bearTextureStrawberry = require('../../../static/img/sp-bear-strawberry.png');
+const bearTextureGrape = require('../../../static/img/sp-bear-grape.png');
+const Lever = require('./ui/lever');
 
 class SummyBearsView {
   constructor(config) {
     // todo: merge default config with passed config
     this.config = SummyBearsView.DefaultConfig;
     this.$element = $('<div class="summy-bears">');
+    this.$bgImage = $('<div class="bg-image">');
+    this.$element.append(this.$bgImage);
+    this.$matterContainer = $('<div class="matter-container">');
+    this.$element.append(this.$matterContainer);
+    this.$fgImage = $('<div class="fg-image">');
+    this.$element.append(this.$fgImage);
+    this.$uiContainer = $('<div class="ui-container">');
+    this.$element.append(this.$uiContainer);
+
+
+    this.transparentBodies = this.config?.matter?.transparentBodies;
+
     this.worldObjects = {};
     this.chutes = [];
     this.bears = [];
@@ -20,12 +38,13 @@ class SummyBearsView {
 
     this.engine = Matter.Engine.create();
     this.render = Matter.Render.create({
-      element: this.$element[0],
+      element: this.$matterContainer[0],
       engine: this.engine,
       options: {
         width: this.config.stage.width,
         height: this.config.stage.height,
-        wireframes: true,
+        wireframes: this.config.matter.wireframes,
+        background: 'transparent',
       },
     });
 
@@ -46,19 +65,39 @@ class SummyBearsView {
 
   initWorld() {
     const Rectangle = Matter.Bodies.rectangle;
+    const Circle = Matter.Bodies.circle;
 
-    this.worldObjects.ramp = Rectangle(650, 560, 2000, 60, {
+    const rampSurface = Rectangle(630, 560, 2000, 60, {
+      label: 'rampSurface',
+      render: {
+        fillStyle: this.transparentBodies ? 'transparent' : '#fff',
+      },
+    });
+    const rampEnd = Circle(1630, 560, 30, {
+      label: 'ramEnd',
+      render: {
+        fillStyle: this.transparentBodies ? 'transparent' : '#fff',
+      },
+    });
+    this.worldObjects.ramp = Matter.Body.create({
       label: 'ramp',
+      parts: [rampSurface, rampEnd],
       isStatic: true,
-      angle: this.config.ramp.angle * ((Math.PI * 2) / 360),
       staticFriction: 0.5,
       friction: 0,
     });
+    Matter.Body.setAngle(
+      this.worldObjects.ramp,
+      this.config.ramp.angle * ((Math.PI * 2) / 360)
+    );
 
     this.countThreshold = Math.ceil(this.worldObjects.ramp.bounds.max.y);
 
     const boxProps = {
       friction: 0.5,
+      render: {
+        fillStyle: '#fff',
+      },
     };
 
     const boxLeft = Rectangle(1650, 830, 20, 140, {
@@ -84,12 +123,6 @@ class SummyBearsView {
     });
 
     window.box = this.worldObjects.box;
-
-    // this.worldObjects.platform = Matter.Bodies.rectangle(1920, 940, 640, 60, {
-    //   label: 'platform',
-    //   isStatic: true,
-    //   friction: 0.1,
-    // });
 
     // Create chutes
     const chuteXs = Array.from(
@@ -132,36 +165,54 @@ class SummyBearsView {
    *  The width of the walls of the chute. Walls are placed outside the width of the chute.
    */
   addChute(x, y, width, height, wallWidth) {
-    const leftWall = Matter.Bodies.rectangle(
-      x - width / 2 - wallWidth / 2,
-      y - height / 2,
-      wallWidth,
-      height,
-      {
-        label: 'chuteL',
-        isStatic: true,
-      }
-    );
-    const rightWall = Matter.Bodies.rectangle(
-      x + width / 2 + wallWidth / 2,
-      y - height / 2,
-      wallWidth,
-      height,
-      {
-        label: 'chuteR',
-        isStatic: true,
-      }
-    );
+    // const leftWall = Matter.Bodies.rectangle(
+    //   x - width / 2 - wallWidth / 2,
+    //   y - height / 2,
+    //   wallWidth,
+    //   height,
+    //   {
+    //     label: 'chuteL',
+    //     isStatic: true,
+    //     render: {
+    //       fillStyle: this.transparentBodies ? 'transparent' : '#fff',
+    //     },
+    //   }
+    // );
+    // const rightWall = Matter.Bodies.rectangle(
+    //   x + width / 2 + wallWidth / 2,
+    //   y - height / 2,
+    //   wallWidth,
+    //   height,
+    //   {
+    //     label: 'chuteR',
+    //     isStatic: true,
+    //     render: {
+    //       fillStyle: this.transparentBodies ? 'transparent' : '#fff',
+    //     },
+    //   }
+    // );
 
     this.chutes.push({
       x,
       y,
       height,
-      leftWall,
-      rightWall,
+      // leftWall,
+      // rightWall,
     });
 
-    Matter.Composite.add(this.engine.world, [leftWall, rightWall]);
+    // Matter.Composite.add(this.engine.world, [leftWall, rightWall]);
+  }
+
+  static getRandomBearTexture() {
+    const textures = [
+      bearTextureApple,
+      bearTextureLemon,
+      bearTextureOrange,
+      bearTextureStrawberry,
+      bearTextureGrape,
+    ];
+    const index = Math.floor(Math.random() * textures.length);
+    return textures[index];
   }
 
   createBear(x, y) {
@@ -180,6 +231,13 @@ class SummyBearsView {
           mass: this.config.bears.mass,
           restitution: this.config.bears.restitution,
           slop: this.config.bears.slop,
+          render: {
+            sprite: {
+              texture: SummyBearsView.getRandomBearTexture(),
+              xScale: 0.5,
+              yScale: 0.5,
+            },
+          },
         }
       ),
       counted: false,
@@ -338,6 +396,10 @@ class SummyBearsView {
 }
 
 SummyBearsView.DefaultConfig = {
+  matter: {
+    wireframes: false,
+    transparentBodies: true,
+  },
   stage: {
     width: 1920,
     height: 1080,
