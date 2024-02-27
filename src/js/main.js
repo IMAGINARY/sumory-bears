@@ -4,6 +4,7 @@ const SummyBearsApp = require('./lib/SummyBearsApp');
 const showFatalError = require('./lib/helpers-web/show-fatal-error');
 const CfgLoader = require('./lib/loader/cfg-loader');
 const CfgReaderFetch = require('./lib/loader/cfg-reader-fetch');
+const { initSentry } = require('./lib/helpers/sentry');
 
 (async () => {
   try {
@@ -19,6 +20,12 @@ const CfgReaderFetch = require('./lib/loader/cfg-reader-fetch');
         settingsFilename = settingsFileUnsafe;
       }
     }
+
+    const sentryDSN = urlParams.get('sentry-dsn') || process.env.SENTRY_DSN;
+    if (sentryDSN) {
+      initSentry(sentryDSN);
+    }
+
     const cfgLoader = new CfgLoader(CfgReaderFetch, yaml.load);
     const config = await cfgLoader
       .load([

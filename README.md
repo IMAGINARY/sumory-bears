@@ -24,6 +24,7 @@ The `index.html` accepts the following query string parameters:
 
 - `settings`: The name of a settings file to load. Defaults to `settings.yml`. It must reside in the
   root directory and have a name that only contains letters, numbers, - or _, and ends in `.yml`.
+- `sentry-dsn`: Sentry DSN to use for error reporting. Defaults to none.
 
 ## Configuration
 
