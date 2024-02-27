@@ -2,7 +2,8 @@
   position: relative;
   cursor: pointer;
 
-  .lever-body, .lever-handle, .lever-shadow, .lever-knob, .lever-text, .lever-event-mask {
+  .lever-body, .lever-handle, .lever-shadow, .lever-knob,
+  .lever-text, .lever-event-mask, .lever-light {
     position: absolute;
     background-size: contain;
     background-repeat: no-repeat;
@@ -43,15 +44,28 @@
   }
 
   .lever-text {
-    top: -44px;
+    top: -48px;
     left: 1px;
     text-align: center;
     width: 44px;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: bold;
     color: white;
     animation: hide-text 0.3s ease-in forwards;
     user-select: none;
+  }
+
+  .lever-light {
+    top: 4px;
+    right: -40px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $c-green;
+
+    &.off {
+      background-color: $c-red;
+    }
   }
 
   .lever-event-mask {
@@ -125,8 +139,9 @@
   &.with-text {
    .lever-text {
      opacity: 1;
+     transform: scale(0);
      transform-origin: 50% 100%;
-     animation: text-appears 0.3s ease-in forwards;
+     animation: 0.5s text-appears 0.2s ease-in forwards;
    }
   }
 }

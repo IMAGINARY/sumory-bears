@@ -1,5 +1,9 @@
+const EventEmitter = require('events');
+
 class Lever {
   constructor() {
+    this.events = new EventEmitter();
+
     this.$element = $('<div></div>')
       .addClass('lever')
       .on('pointerdown', this.handleAction.bind(this));
@@ -18,18 +22,19 @@ class Lever {
     this.$text = $('<div></div>')
       .addClass('lever-text')
       .appendTo(this.$element);
+    this.$light = $('<div></div>')
+      .addClass('lever-light')
+      .appendTo(this.$element);
     this.$eventMask = $('<div></div>')
       .addClass('lever-event-mask')
       .appendTo(this.$element);
 
-    this.showText('20');
-
     this.isUp = true;
-    this.isDisabled = false;
+    this.state = Lever.State.enabled;
   }
 
   handleAction() {
-    if (this.isDisabled) {
+    if (this.state !== Lever.State.enabled) {
       return;
     }
     if (this.isUp) {
@@ -41,14 +46,20 @@ class Lever {
 
   pullDown() {
     this.isUp = false;
+    this.disable(true);
     this.$element.removeClass('lever-up');
     this.$element.addClass('lever-down');
+    this.events.emit('pull-down');
   }
 
   pullUp() {
     this.isUp = true;
     this.$element.removeClass('lever-down');
     this.$element.addClass('lever-up');
+    this.events.emit('pull-up');
+    if (this.state !== Lever.State.disabled) {
+      this.enable();
+    }
   }
 
   showText(text) {
@@ -59,6 +70,33 @@ class Lever {
   hideText() {
     this.$element.removeClass('with-text');
   }
+
+  hasText() {
+    return this.$element.hasClass('with-text');
+  }
+
+  disable(temporary = false) {
+    this.state = temporary
+      ? Lever.State.disabledTemporarily
+      : Lever.State.disabled;
+    this.$light.addClass('off');
+  }
+
+  enable() {
+    this.state = Lever.State.enabled;
+    this.$light.removeClass('off');
+  }
+
+  reset() {
+    this.pullUp();
+    this.hideText();
+  }
 }
+
+Lever.State = {
+  enabled: 'enabled',
+  disabledTemporarily: 'disabled-temporarily',
+  disabled: 'disabled',
+};
 
 module.exports = Lever;
