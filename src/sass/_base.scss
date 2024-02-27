@@ -6,11 +6,11 @@ html, body {
 }
 
 body {
-  @include regularText;
+  @include regular-text;
 
   background-color: $c-black;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  @include headingText;
+  @include heading-text;
 }

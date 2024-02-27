@@ -1,7 +1,7 @@
-@mixin regularText {
-
+@mixin regular-text {
+  @include baloo2-extra-bold;
 }
 
-@mixin headingText {
-
+@mixin heading-text {
+  @include baloo2-extra-bold;
 }
