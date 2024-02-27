@@ -11,8 +11,7 @@ const Marquee = require('./ui/marquee');
 
 class SummyBearsView {
   constructor(config) {
-    // todo: merge default config with passed config
-    this.config = SummyBearsView.DefaultConfig;
+    this.config = config;
     this.events = new EventEmitter();
     this.$element = $('<div class="summy-bears">');
     this.$bgImage = $('<div class="bg-image">');
@@ -88,7 +87,7 @@ class SummyBearsView {
         this.handleLeverPull(i + 1);
         setTimeout(() => {
           lever.pullUp();
-        }, this.config.ui.leverResetDelay);
+        }, this.config.app.leverResetDelay);
       });
       return lever;
     });
@@ -108,7 +107,7 @@ class SummyBearsView {
     this.counter.$element.appendTo(this.$uiContainer);
 
     const appendI18nText = ($element, texts) => {
-      this.config.ui.languages.forEach((lang, i) => {
+      this.config.app.languages.forEach((lang, i) => {
         $element.append(
           $('<div></div>')
             .addClass(['lang', `lang-${lang}`, `lang-${i}`])
@@ -474,7 +473,7 @@ class SummyBearsView {
   queueBearProcessing() {
     this.bearProcessingTimer = setTimeout(() => {
       this.handleAllBearsInBox();
-    }, this.config.ui.bearProcessingQueueTimeout);
+    }, this.config.app.bearProcessingQueueTimeout);
     this.readyToProcessBears = true;
   }
 
@@ -495,7 +494,7 @@ class SummyBearsView {
       this.clearAllBears();
       this.processingBears = false;
       this.events.emit('bear-process-done');
-    }, this.config.ui.boxDispatchDelay);
+    }, this.config.app.boxDispatchDelay);
   }
 
   handleLeverPull(leverIndex) {
@@ -523,62 +522,5 @@ class SummyBearsView {
     }
   }
 }
-
-SummyBearsView.DefaultConfig = {
-  ui: {
-    leverResetDelay: 400,
-    boxDispatchDelay: 1000,
-    bearProcessingQueueTimeout: 5000,
-    languages: ['de', 'en'],
-  },
-  i18n: {
-    instructions: {
-      en: 'Get as many gummy bears as possible!<br>What’s your best strategy?',
-      de: 'Sammle so viele Gummibärchen als möglich!<br>Was ist deine beste Strategie?',
-    },
-    newGame: {
-      en: 'New Game',
-      de: 'Neues Spiel',
-    },
-  },
-  matter: {
-    wireframes: false,
-    transparentBodies: true,
-    runnerDelta: 1000 / 60,
-    runnerIsFixed: false,
-    engineTimescale: 1,
-    enableSleeping: false,
-    showPerformance: false,
-  },
-  stage: {
-    width: 1920,
-    height: 1080,
-    offStageMargin: 500,
-  },
-  ramp: {
-    angle: 8,
-  },
-  box: {
-    inX: 1740,
-    outX: 2050,
-    topSpeed: 6,
-  },
-  bears: {
-    width: 12,
-    height: 24,
-    airFriction: 0.01,
-    staticFriction: 0.5,
-    friction: 0.000025,
-    mass: 0.5,
-    restitution: 0.4,
-    slop: 0.2,
-  },
-  chutes: {
-    count: 9,
-    width: 60,
-    height: 200, // min on-screen height
-    spacing: 170,
-  },
-};
 
 module.exports = SummyBearsView;

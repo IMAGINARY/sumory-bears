@@ -2,8 +2,8 @@ const shuffle = require('./helpers/shuffle');
 
 class SummyBearsGame {
   constructor(config) {
-    this.config = SummyBearsGame.DefaultConfig;
-    this.values = shuffle(Array.from(this.config.values));
+    this.config = config;
+    this.values = shuffle(Array.from(this.config.game.values));
     this.pulls = 0;
     this.totalBears = 0;
   }
@@ -19,21 +19,16 @@ class SummyBearsGame {
   }
 
   isGameOver() {
-    return this.pulls >= this.config.pullsPerGame;
+    return this.pulls >= this.config.game.pullsPerGame;
   }
 
   getPullsLeft() {
-    return this.config.pullsPerGame - this.pulls;
+    return this.config.game.pullsPerGame - this.pulls;
   }
 
   getScore() {
     return this.totalBears;
   }
 }
-
-SummyBearsGame.DefaultConfig = {
-  values: [1, 1, 2, 3, 5, 7, 9, 15, 25],
-  pullsPerGame: 9,
-};
 
 module.exports = SummyBearsGame;

@@ -1,0 +1,7 @@
+i18n:
+  instructions:
+    en: 'Get as many gummy bears as possible!<br>What’s your best strategy?'
+    de: 'Sammle so viele Gummibärchen als möglich!<br>Was ist deine beste Strategie?'
+  newGame:
+    en: 'New Game'
+    de: 'Neues Spiel'

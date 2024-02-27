@@ -18,6 +18,21 @@ npm run build
 
 The built files will be in the `dist` directory, and can be served using any web server.
 
+## Query strings
+
+The `index.html` accepts the following query string parameters:
+
+- `settings`: The name of a settings file to load. Defaults to `settings.yml`. It must reside in the
+  root directory and have a name that only contains letters, numbers, - or _, and ends in `.yml`.
+
+## Configuration
+
+The configuration files are in the `config` directory.
+
+You can override any of the configuration keys through a `settings.yml` file in the root directory.
+
+The `app.config.json` file in the root directory contains build-time configuration settings.
+
 ## Developer mode commands
 
 ### Keyboard Shortcuts

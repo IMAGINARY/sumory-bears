@@ -27,6 +27,11 @@
       "from": "matter-tools.min.*",
       "to": "../vendor/matter-tools/",
       "context": "node_modules/matter-tools/build/"
+    },
+    {
+      "from": "./",
+      "to": "../config",
+      "context": "config/"
     }
   ],
   "tags": [

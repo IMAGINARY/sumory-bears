@@ -1,0 +1,8 @@
+matter:
+  wireframes: false
+  transparentBodies: true
+  runnerDelta: 16.666666666666668 # 1000/60
+  runnerIsFixed: false
+  engineTimescale: 1
+  enableSleeping: false
+  showPerformance: false

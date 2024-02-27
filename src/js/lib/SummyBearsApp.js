@@ -3,7 +3,7 @@ const SummyBearsGame = require('./SummyBearsGame');
 
 class SummyBearsApp {
   constructor(config, container) {
-    this.config = SummyBearsApp.DefaultConfig;
+    this.config = config;
     this.container = container;
     this.view = new SummyBearsView(this.config);
     this.idleTimer = null;
@@ -85,15 +85,13 @@ class SummyBearsApp {
     }
 
     const delay = this.game.isGameOver()
-      ? this.config.autoRestartTimeout
-      : this.config.idleRestartTimeout;
+      ? this.config.app.autoRestartTimeout
+      : this.config.app.idleRestartTimeout;
 
     if (delay) {
       this.idleTimer = setTimeout(() => {
-        console.log('Idle timeout reached');
         this.startNewGame();
       }, delay);
-      console.log(`Idle timer reset for ${delay}`);
     }
   }
 
@@ -104,10 +102,5 @@ class SummyBearsApp {
     }
   }
 }
-
-SummyBearsApp.DefaultConfig = {
-  autoRestartTimeout: 10000,
-  idleRestartTimeout: 30000,
-};
 
 module.exports = SummyBearsApp;
