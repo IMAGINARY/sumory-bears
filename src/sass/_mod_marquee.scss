@@ -1,0 +1,87 @@
+$light-diameter: 12px;
+
+.marquee {
+  position: absolute;
+
+  .marquee-light {
+    background-color: $c-orange-light-dark;
+    width: $light-diameter;
+    height: $light-diameter;
+    border-radius: 50%;
+  }
+
+  .marquee-spacer {
+    background-color: transparent;
+    visibility: hidden;
+    width: $light-diameter;
+    height: $light-diameter;
+    border-radius: 50%;
+  }
+
+  .marquee-row, .marquee-column, .marquee-column-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .marquee-row {
+    flex-direction: row;
+    height: $light-diameter;
+    width: 100%;
+  }
+
+  .marquee-column-container {
+    height: 100%;
+    margin-top: -1 * $light-diameter;
+    margin-bottom: -1 * $light-diameter;
+  }
+
+  .marquee-column {
+    flex-direction: column;
+    width: $light-diameter;
+    height: 100%;
+  }
+
+  .marquee-row-bottom {
+    flex-direction: row-reverse;
+  }
+
+  .marquee-column-left {
+    flex-direction: column-reverse;
+  }
+
+  @keyframes marquee {
+    0% {
+      background-color: $c-yellow;
+    }
+
+    65% {
+      background-color: $c-yellow;
+    }
+
+    66% {
+      background-color: $c-orange;
+    }
+
+    100% {
+      background-color: $c-orange;
+    }
+  }
+
+  &.marquee-on {
+    .marquee-light {
+      background-color: $c-yellow;
+    }
+
+    .marquee-light-mod3-0 {
+      animation: marquee linear 1s infinite;
+    }
+
+    .marquee-light-mod3-1 {
+      animation: marquee linear 1s 0.33s infinite;
+    }
+
+    .marquee-light-mod3-2 {
+      animation: marquee linear 1s 0.66s infinite;
+    }
+  }
+}
