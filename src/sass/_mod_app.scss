@@ -2,6 +2,7 @@
   position: relative;
   width: 1920px;
   height: 1080px;
+  overflow: hidden;
 
   &.with-debug {
     transform: scale(0.75);
@@ -39,16 +40,156 @@
     width: 100%;
     height: 100%;
 
-    .lever-1 {
+    .lever {
       position: absolute;
-      bottom: 120px;
-      left: 120px;
+      bottom: 150px;
+      margin-left: -26px;
+      transform: scale(1.1);
     }
 
     .rotary-counter {
       position: absolute;
-      top: 437px;
-      right: 105px;
+      top: 378px;
+      right: 103px;
+    }
+  }
+
+  @keyframes show-sign-on-arm {
+    0% {
+      transform: rotate(-45deg);
+    }
+
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes hide-sign-on-arm {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(-45deg);
+    }
+  }
+
+  @mixin sign-on-arm {
+    position: absolute;
+    bottom: 62px;
+    right: 86px;
+    width: 188px;
+    height: 83px;
+    font-size: 2.5rem;
+    color: $c-brown;
+    background-color: white;
+    border: 8px solid white;
+    border-radius: 7px;
+    transition: opacity 0.5s ease-in-out;
+    transform: rotate(-45deg);
+    transform-origin: 400px 0;
+    animation: hide-sign-on-arm 0.5s ease-in-out forwards;
+
+    &::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 300px;
+      height: 20px;
+      right: -308px;
+      top: 26px;
+      background-color: $c-orange-light;
+    }
+
+    &.visible {
+      animation: show-sign-on-arm 0.5s ease-in-out forwards;
+    }
+  }
+
+  .pulls-left {
+    @include sign-on-arm;
+
+    background-image: url('../../static/img/lever/pulls.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left center;
+    padding-left: 95px;
+    padding-top: 5px;
+
+    &::before {
+      content: "×";
+      display: inline-block;
+      padding-right: 0.2em;
+    }
+  }
+
+  .new-game-sign {
+    @include sign-on-arm;
+
+    width: 280px;
+    height: 100px;
+    right: 40px;
+    bottom: 50px;
+    padding: 0.5em;
+    padding-left: 75px;
+    font-size: 1.9rem;
+    line-height: 1.2;
+    background-color: $c-yellow;
+    border: none;
+    color: $c-black;
+    background-image: url('../../static/img/openmoji/1F504.svg');
+    background-repeat: no-repeat;
+    background-size: 65px 65px;
+    background-position: 5px center;
+    cursor: pointer;
+    transform-origin: 500px 0;
+
+    &::after
+    {
+      top: 40px;
+      right: -300px;
+    }
+
+    .lang {
+      opacity: 0.5;
+      white-space: nowrap;
+    }
+
+    .lang-0 {
+      opacity: 1;
+    }
+  }
+
+  .bear-sign {
+    position: absolute;
+    top: 0;
+    right: 75px;
+    width: 213px;
+    height: 455px;
+    background-image: url('../../static/img/bear-sign.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    .marquee {
+      width: 183px;
+      height: 81px;
+      top: 364px;
+      left: 14px;
+    }
+  }
+
+  .instructions {
+    position: absolute;
+    bottom: 238px;
+    left: 50px;
+    font-size: 2.1rem;
+    line-height: 1.2;
+    color: $c-orange-light;
+
+    .lang-0 {
+      color: $c-white;
+      margin-bottom: 0.25em;
     }
   }
 }

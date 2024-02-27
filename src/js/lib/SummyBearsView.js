@@ -1,4 +1,5 @@
 /* globals Matter, MatterTools */
+const EventEmitter = require('events');
 const bearTextureApple = require('../../../static/img/sp-bear-apple.png');
 const bearTextureLemon = require('../../../static/img/sp-bear-lemon.png');
 const bearTextureOrange = require('../../../static/img/sp-bear-orange.png');
@@ -6,11 +7,13 @@ const bearTextureStrawberry = require('../../../static/img/sp-bear-strawberry.pn
 const bearTextureGrape = require('../../../static/img/sp-bear-grape.png');
 const Lever = require('./ui/lever');
 const RotaryCounter = require('./ui/rotary-counter');
+const Marquee = require('./ui/marquee');
 
 class SummyBearsView {
   constructor(config) {
     // todo: merge default config with passed config
     this.config = SummyBearsView.DefaultConfig;
+    this.events = new EventEmitter();
     this.$element = $('<div class="summy-bears">');
     this.$bgImage = $('<div class="bg-image">');
     this.$element.append(this.$bgImage);
@@ -21,12 +24,6 @@ class SummyBearsView {
     this.$uiContainer = $('<div class="ui-container">');
     this.$element.append(this.$uiContainer);
 
-    this.lever1 = new Lever();
-    this.lever1.$element.addClass('lever-1').appendTo(this.$uiContainer);
-
-    this.counter = new RotaryCounter(3);
-    this.counter.$element.appendTo(this.$uiContainer);
-
     this.transparentBodies = this.config?.matter?.transparentBodies;
 
     this.worldObjects = {};
@@ -36,13 +33,24 @@ class SummyBearsView {
     this.boxIn = true;
     this.boxSpeed = 0;
     this.bearCount = 0;
-    this.countThreshold = Number.Infinity;
+    this.bearRampThreshold = {
+      x: Infinity,
+      y: Infinity,
+    };
+    this.processingBears = false;
+    this.bearProcessingTimer = null;
+    this.readyToProcessBears = false;
 
     this.debugToolsShown = false;
     this.debugGui = null;
     this.debugInspector = null;
 
-    this.engine = Matter.Engine.create();
+    this.engine = Matter.Engine.create({
+      enableSleeping: this.config.matter.enableSleeping,
+      timing: {
+        timeScale: this.config.matter.engineTimescale,
+      },
+    });
     this.render = Matter.Render.create({
       element: this.$matterContainer[0],
       engine: this.engine,
@@ -51,6 +59,7 @@ class SummyBearsView {
         height: this.config.stage.height,
         wireframes: this.config.matter.wireframes,
         background: 'transparent',
+        showPerformance: this.config.matter.showPerformance,
       },
     });
 
@@ -65,8 +74,61 @@ class SummyBearsView {
       this.checkBearPositions();
     });
     Matter.Render.run(this.render);
-    this.runner = Matter.Runner.create();
+    this.runner = Matter.Runner.create({
+      delta: this.config.matter.runnerDelta,
+      isFixed: this.config.matter.runnerIsFixed,
+    });
     Matter.Runner.run(this.runner, this.engine);
+
+    this.levers = this.chutes.map((chute, i) => {
+      const lever = new Lever();
+      lever.$element.appendTo(this.$uiContainer);
+      lever.$element.css('left', `${chute.x}px`);
+      lever.events.on('pull-down', () => {
+        this.handleLeverPull(i + 1);
+        setTimeout(() => {
+          lever.pullUp();
+        }, this.config.ui.leverResetDelay);
+      });
+      return lever;
+    });
+
+    this.pullsLeft = $('<div></div>')
+      .addClass('pulls-left')
+      .appendTo(this.$uiContainer);
+
+    this.$bearSign = $('<div></div>')
+      .addClass('bear-sign')
+      .appendTo(this.$uiContainer);
+
+    this.bearSignMarquee = new Marquee(9, 3);
+    this.$bearSign.append(this.bearSignMarquee.$element);
+
+    this.counter = new RotaryCounter(3);
+    this.counter.$element.appendTo(this.$uiContainer);
+
+    const appendI18nText = ($element, texts) => {
+      this.config.ui.languages.forEach((lang, i) => {
+        $element.append(
+          $('<div></div>')
+            .addClass(['lang', `lang-${lang}`, `lang-${i}`])
+            .html(texts?.[lang])
+        );
+      });
+    };
+
+    this.$instructions = $('<div></div>')
+      .addClass('instructions')
+      .appendTo(this.$uiContainer);
+    appendI18nText(this.$instructions, this.config.i18n.instructions);
+
+    this.$newGameSign = $('<div></div>')
+      .addClass('new-game-sign visible')
+      .on('pointerdown', () => {
+        this.events.emit('new-game');
+      })
+      .appendTo(this.$uiContainer);
+    appendI18nText(this.$newGameSign, this.config.i18n.newGame);
   }
 
   initWorld() {
@@ -97,7 +159,10 @@ class SummyBearsView {
       this.config.ramp.angle * ((Math.PI * 2) / 360)
     );
 
-    this.countThreshold = Math.ceil(this.worldObjects.ramp.bounds.max.y);
+    this.bearRampThreshold = {
+      y: Math.ceil(this.worldObjects.ramp.bounds.max.y),
+      x: Math.ceil(this.worldObjects.ramp.bounds.max.x),
+    };
 
     const boxProps = {
       friction: 0.5,
@@ -140,14 +205,11 @@ class SummyBearsView {
         x,
         this.config.chutes.height + yOffset,
         this.config.chutes.width,
-        this.config.chutes.height + yOffset,
-        this.config.chutes.wallWidth
+        this.config.chutes.height + yOffset
       );
     });
 
     Matter.Composite.add(this.engine.world, Object.values(this.worldObjects));
-
-    window.toggleBox = this.toggleBox.bind(this);
   }
 
   getHtmlElement() {
@@ -165,46 +227,13 @@ class SummyBearsView {
    *  The inner width of the chute.
    * @param {number} height
    *  The height of the chute.
-   * @param {number} wallWidth
-   *  The width of the walls of the chute. Walls are placed outside the width of the chute.
    */
-  addChute(x, y, width, height, wallWidth) {
-    // const leftWall = Matter.Bodies.rectangle(
-    //   x - width / 2 - wallWidth / 2,
-    //   y - height / 2,
-    //   wallWidth,
-    //   height,
-    //   {
-    //     label: 'chuteL',
-    //     isStatic: true,
-    //     render: {
-    //       fillStyle: this.transparentBodies ? 'transparent' : '#fff',
-    //     },
-    //   }
-    // );
-    // const rightWall = Matter.Bodies.rectangle(
-    //   x + width / 2 + wallWidth / 2,
-    //   y - height / 2,
-    //   wallWidth,
-    //   height,
-    //   {
-    //     label: 'chuteR',
-    //     isStatic: true,
-    //     render: {
-    //       fillStyle: this.transparentBodies ? 'transparent' : '#fff',
-    //     },
-    //   }
-    // );
-
+  addChute(x, y, width, height) {
     this.chutes.push({
       x,
       y,
       height,
-      // leftWall,
-      // rightWall,
     });
-
-    // Matter.Composite.add(this.engine.world, [leftWall, rightWall]);
   }
 
   static getRandomBearTexture() {
@@ -284,8 +313,9 @@ class SummyBearsView {
 
   checkBearPositions() {
     const removed = [];
+    let allBearsCounted = true;
     this.bears.forEach((bear) => {
-      if (!bear.counted && bear.body.position.y > this.countThreshold) {
+      if (!bear.counted && this.bearIsOffRamp(bear)) {
         bear.counted = true;
         this.bearCount += 1;
         this.counter.setTarget(this.bearCount);
@@ -294,10 +324,15 @@ class SummyBearsView {
       if (this.bearIsOutOfBounds(bear)) {
         Matter.Composite.remove(this.engine.world, bear.body);
         removed.push(bear);
+      } else if (!bear.counted) {
+        allBearsCounted = false;
       }
     });
     if (removed.length) {
       this.bears = this.bears.filter((bear) => !removed.includes(bear));
+    }
+    if (this.readyToProcessBears && allBearsCounted) {
+      this.handleAllBearsInBox();
     }
   }
 
@@ -306,6 +341,17 @@ class SummyBearsView {
       Matter.Composite.remove(this.engine.world, bear.body);
     });
     this.bears = [];
+  }
+
+  reset() {
+    this.clearAllBears();
+    this.bearCount = 0;
+    this.counter.setTarget(0);
+    this.resetLevers();
+    this.enableLevers();
+    this.slideBoxIn();
+    this.bearSignMarquee.turnOff();
+    this.hideNewGameSign();
   }
 
   showDebugGui() {
@@ -349,6 +395,13 @@ class SummyBearsView {
     }
   }
 
+  bearIsOffRamp(bear) {
+    return (
+      bear.body.position.y > this.bearRampThreshold.y ||
+      bear.body.position.x > this.bearRampThreshold.x
+    );
+  }
+
   bearIsOutOfBounds(bear) {
     return (
       bear.body.position.x < 0 - this.config.stage.offStageMargin ||
@@ -360,11 +413,9 @@ class SummyBearsView {
   }
 
   updateBoxPosition(time) {
-    // todo: make time independent
-    // todo: time = 1/60 aprox.
     const { box } = this.worldObjects;
     const targetX = this.boxIn ? this.config.box.inX : this.config.box.outX;
-    const speed = this.config.box.topSpeed;
+    const speed = this.config.box.topSpeed * (time * 60);
     const diff = targetX - box.position.x;
     const { x, y } = box.position;
     if (Math.abs(diff) < speed) {
@@ -375,6 +426,80 @@ class SummyBearsView {
       this.boxSpeed = diff > 0 ? speed : -speed;
       Matter.Body.setPosition(box, { x: x + this.boxSpeed, y }, false);
     }
+  }
+
+  triggerLeverPull(leverIndex) {
+    this.levers[leverIndex - 1].handleAction();
+  }
+
+  showLeverText(leverIndex, text) {
+    this.levers[leverIndex - 1].showText(text);
+  }
+
+  disableLevers() {
+    this.levers.forEach((lever) => {
+      lever.disable();
+    });
+  }
+
+  enableLevers() {
+    this.levers.forEach((lever) => {
+      lever.enable();
+    });
+  }
+
+  resetLevers() {
+    this.levers.forEach((lever) => {
+      lever.reset();
+    });
+  }
+
+  showPullsLeft(pullsLeft) {
+    this.pullsLeft.addClass('visible');
+    this.pullsLeft.text(pullsLeft);
+  }
+
+  hidePullsLeft() {
+    this.pullsLeft.removeClass('visible');
+  }
+
+  showNewGameSign() {
+    this.$newGameSign.addClass('visible');
+  }
+
+  hideNewGameSign() {
+    this.$newGameSign.removeClass('visible');
+  }
+
+  queueBearProcessing() {
+    this.bearProcessingTimer = setTimeout(() => {
+      this.handleAllBearsInBox();
+    }, this.config.ui.bearProcessingQueueTimeout);
+    this.readyToProcessBears = true;
+  }
+
+  handleAllBearsInBox() {
+    clearTimeout(this.bearProcessingTimer);
+    this.readyToProcessBears = false;
+    this.processBearBatch();
+  }
+
+  processBearBatch() {
+    if (this.processingBears) {
+      return;
+    }
+    this.processingBears = true;
+    this.events.emit('bear-process-start');
+    this.slideBoxOut();
+    setTimeout(() => {
+      this.clearAllBears();
+      this.processingBears = false;
+      this.events.emit('bear-process-done');
+    }, this.config.ui.boxDispatchDelay);
+  }
+
+  handleLeverPull(leverIndex) {
+    this.events.emit('lever-pull', leverIndex);
   }
 
   hideDebugGui() {
@@ -400,9 +525,30 @@ class SummyBearsView {
 }
 
 SummyBearsView.DefaultConfig = {
+  ui: {
+    leverResetDelay: 400,
+    boxDispatchDelay: 1000,
+    bearProcessingQueueTimeout: 5000,
+    languages: ['de', 'en'],
+  },
+  i18n: {
+    instructions: {
+      en: 'Get as many gummy bears as possible!<br>What’s your best strategy?',
+      de: 'Sammle so viele Gummibärchen als möglich!<br>Was ist deine beste Strategie?',
+    },
+    newGame: {
+      en: 'New Game',
+      de: 'Neues Spiel',
+    },
+  },
   matter: {
     wireframes: false,
     transparentBodies: true,
+    runnerDelta: 1000 / 60,
+    runnerIsFixed: false,
+    engineTimescale: 1,
+    enableSleeping: false,
+    showPerformance: false,
   },
   stage: {
     width: 1920,
@@ -431,7 +577,6 @@ SummyBearsView.DefaultConfig = {
     count: 9,
     width: 60,
     height: 200, // min on-screen height
-    wallWidth: 10,
     spacing: 170,
   },
 };

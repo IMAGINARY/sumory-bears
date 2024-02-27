@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.125 90.387">
+  <g id="c" data-name="Layer 2">
+    <g>
+      <g>
+        <g>
+          <g>
+            <rect x="35.125" y="5.387" width="44" height="84" fill="#ea5b0c" stroke="#7f0900" stroke-miterlimit="10" stroke-width="2"/>
+            <rect x="79.125" y="5.387" width="7" height="84" fill="#7f0900" stroke="#7f0900" stroke-miterlimit="10" stroke-width="2"/>
+          </g>
+          <rect x="46.298" y="24.941" width="20" height="46" fill="#7f0900" stroke-width="0"/>
+        </g>
+        <rect x="16.401" y="29.037" width="50" height="10" transform="translate(27.01 -17.591) rotate(35)" fill="#ea5b0c" stroke="#7f0900" stroke-miterlimit="10" stroke-width="2"/>
+        <g>
+          <circle cx="14.5" cy="14.5" r="13.5" fill="#ea5b0c" stroke-width="0"/>
+          <path d="M14.5,2c6.904,0,12.5,5.596,12.5,12.5s-5.596,12.5-12.5,12.5S2,21.404,2,14.5,7.596,2,14.5,2M14.5,0C6.505,0,0,6.505,0,14.5s6.505,14.5,14.5,14.5,14.5-6.505,14.5-14.5S22.495,0,14.5,0h0Z" fill="#7f0900" stroke-width="0"/>
+        </g>
+        <rect x="58.352" y="26.379" width="7.503" height="43.124" fill="#7f0900" stroke-width="0"/>
+      </g>
+      <g>
+        <line x1="14.5" y1="34.897" x2="14.5" y2="59.459" fill="none" stroke="#7f0900" stroke-miterlimit="10" stroke-width="4"/>
+        <polygon points="6.522 57.125 14.5 70.941 22.478 57.125 6.522 57.125" fill="#7f0900" stroke-width="0"/>
+      </g>
+    </g>
+  </g>
+</svg>
