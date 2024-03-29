@@ -56,13 +56,14 @@
   }
 
   .lever-light {
-    top: -29px;
-    right: -28px;
+    top: -30px;
+    right: -30px;
     width: 19px;
     height: 19px;
     background-color: $c-green;
     border: 3px solid $c-green-halo;
     border-radius: 50%;
+    transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out;
 
     &.off {
       background-color: $c-red;
