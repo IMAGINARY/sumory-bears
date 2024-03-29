@@ -44,8 +44,8 @@
   }
 
   .lever-text {
-    top: -48px;
-    left: 1px;
+    top: 85px;
+    left: 0;
     text-align: center;
     width: 44px;
     font-size: 26px;
@@ -56,15 +56,17 @@
   }
 
   .lever-light {
-    top: 4px;
-    right: -40px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+    top: -29px;
+    right: -28px;
+    width: 19px;
+    height: 19px;
     background-color: $c-green;
+    border: 3px solid $c-green-halo;
+    border-radius: 50%;
 
     &.off {
       background-color: $c-red;
+      border-color: $c-red-halo;
     }
   }
 
