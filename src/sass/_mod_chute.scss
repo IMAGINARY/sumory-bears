@@ -1,0 +1,52 @@
+$pipe-width: 60px;
+
+.chute {
+  position: absolute;
+  margin-left: $pipe-width * 0.5 * -1;
+
+  .guides {
+    .guide {
+      position: absolute;
+      width: 70px;
+      height: 14px;
+      background-color: white;
+      margin-left: (70px - $pipe-width) * 0.5 * -1;
+
+      &.top {
+        top: 45px;
+        background-color: white;
+      }
+
+      &.bottom {
+        top: 86px;
+      }
+    }
+  }
+
+  .pipe {
+    position: absolute;
+
+    .body {
+      width: $pipe-width;
+      background-color: white;
+      opacity: 0.6;
+    }
+
+    .end {
+      .ring {
+        width: 70px;
+        height: 38px;
+        margin-left: (70px - $pipe-width) * 0.5 * -1;
+        background-color: white;
+      }
+
+      .tip {
+        width: 100px;
+        height: 24px;
+        margin-left: (100px - $pipe-width) * 0.5 * -1;
+        margin-top: 24px * -1;
+        background-color: white;
+      }
+    }
+  }
+}

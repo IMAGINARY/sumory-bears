@@ -6,6 +6,7 @@ const bearTextureOrange = require('../../../static/img/sp-bear-orange.png');
 const bearTextureStrawberry = require('../../../static/img/sp-bear-strawberry.png');
 const bearTextureGrape = require('../../../static/img/sp-bear-grape.png');
 const Lever = require('./ui/lever');
+const Chute = require('./ui/chute');
 const RotaryCounter = require('./ui/rotary-counter');
 const Marquee = require('./ui/marquee');
 
@@ -18,8 +19,6 @@ class SummyBearsView {
     this.$element.append(this.$bgImage);
     this.$matterContainer = $('<div class="matter-container">');
     this.$element.append(this.$matterContainer);
-    this.$fgImage = $('<div class="fg-image">');
-    this.$element.append(this.$fgImage);
     this.$uiContainer = $('<div class="ui-container">');
     this.$element.append(this.$uiContainer);
 
@@ -90,6 +89,12 @@ class SummyBearsView {
         }, this.config.app.leverResetDelay);
       });
       return lever;
+    });
+
+    this.chuteViews = this.chutes.map((chute) => {
+      const chuteView = new Chute(chute.x, chute.height - 38);
+      chuteView.$element.appendTo(this.$uiContainer);
+      return chuteView;
     });
 
     this.pullsLeft = $('<div></div>')
