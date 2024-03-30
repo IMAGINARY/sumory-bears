@@ -1,8 +1,11 @@
 app:
-  leverResetDelay: 400
+  leverResetDelay: 0
+  bearExpelAnimationDuration: 800
+  # bearExpelDelay must be lower than bearExpelAnimationDuration
+  bearExpelDelay: 300
   boxDispatchDelay: 1000
   bearProcessingQueueTimeout: 5000
-  autoRestartTimeout: 10000
+  autoRestartTimeout: 15000
   idleRestartTimeout: 30000
   languages: ['de', 'en']
 

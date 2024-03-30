@@ -7,10 +7,10 @@ $pipe-width: 60px;
   .guides {
     .guide {
       position: absolute;
-      width: 70px;
+      width: 76px;
       height: 14px;
       background-color: white;
-      margin-left: (70px - $pipe-width) * 0.5 * -1;
+      margin-left: (76px - $pipe-width) * 0.5 * -1;
 
       &.top {
         top: 45px;
@@ -46,7 +46,73 @@ $pipe-width: 60px;
         margin-left: (100px - $pipe-width) * 0.5 * -1;
         margin-top: 24px * -1;
         background-color: white;
+        border-radius: 5px;
       }
     }
   }
+}
+
+@keyframes expel-body {
+  0% {
+    transform: scaleX(1);
+    margin-top: 0;
+  }
+
+  50% {
+    transform: scaleX(1.15);
+    margin-top: -24px;
+  }
+
+  70% {
+    transform: scaleX(1.15);
+    margin-top: -24px;
+  }
+
+  90% {
+    transform: scaleX(0.9);
+    margin-top: 0;
+  }
+
+  100% {
+    transform: scaleX(1);
+    margin-top: 0;
+  }
+
+}
+
+@keyframes expel-tip {
+  0% {
+    margin-top: -24px;
+  }
+
+  50% {
+    margin-top: -34px;
+  }
+
+  70% {
+    margin-top: -34px;
+  }
+
+  90% {
+    margin-top: -1px;
+  }
+
+  100% {
+    margin-top: -24px;
+  }
+}
+
+.chute.expelling {
+  .pipe {
+    .body {
+      animation: expel-body 0.7s ease-in-out;
+    }
+
+    .end {
+      .tip {
+        animation: expel-tip 0.7s ease-in-out;
+      }
+    }
+  }
+
 }

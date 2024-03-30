@@ -86,13 +86,13 @@ class SummyBearsView {
         this.handleLeverPull(i + 1);
         setTimeout(() => {
           lever.pullUp();
-        }, this.config.app.leverResetDelay);
+        }, this.config.app.bearExpelAnimationDuration + this.config.app.leverResetDelay);
       });
       return lever;
     });
 
     this.chuteViews = this.chutes.map((chute) => {
-      const chuteView = new Chute(chute.x, chute.height - 38);
+      const chuteView = new Chute(chute.x, chute.height - 38, this.config);
       chuteView.$element.appendTo(this.$uiContainer);
       return chuteView;
     });
@@ -281,6 +281,19 @@ class SummyBearsView {
     };
     this.bears.push(newBear);
     return newBear;
+  }
+
+  expelBears(chuteNumber, count) {
+    const expelDelay = this.config.app.bearExpelDelay;
+    const animationDuration = this.config.app.bearExpelAnimationDuration;
+
+    this.chuteViews[chuteNumber - 1].$element.addClass('expelling');
+    setTimeout(() => {
+      this.addBears(chuteNumber, count);
+      setTimeout(() => {
+        this.chuteViews[chuteNumber - 1].$element.removeClass('expelling');
+      }, animationDuration - expelDelay);
+    }, expelDelay);
   }
 
   addBears(chuteNumber, count) {

@@ -51,7 +51,7 @@ class SummyBearsApp {
   handleLeverPull(leverIndex) {
     this.resetIdleTimer();
     const bears = this.game.pullLever(leverIndex);
-    this.view.addBears(leverIndex, bears);
+    this.view.expelBears(leverIndex, bears);
     this.view.showLeverText(leverIndex, bears);
     this.view.showPullsLeft(this.game.getPullsLeft());
     if (this.game.isGameOver()) {

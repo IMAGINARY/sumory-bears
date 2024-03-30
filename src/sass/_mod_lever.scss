@@ -63,11 +63,12 @@
     background-color: $c-green;
     border: 3px solid $c-green-halo;
     border-radius: 50%;
-    transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out;
+    transition: background-color 0.3s ease-in-out 0.2s, border-color 0.2s ease-in-out 0.2s;
 
     &.off {
       background-color: $c-red;
       border-color: $c-red-halo;
+      transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out;
     }
   }
 
