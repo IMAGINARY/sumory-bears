@@ -25,7 +25,7 @@
     "html-webpack-tags-plugin": "^3.0.2",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
-    "matter-js": "^0.19.0",
+    "matter-js": "https://github.com/liabru/matter-js/tree/804634144fe97e5a47996c907530755089b04550",
     "matter-tools": "^0.14.0",
     "mini-css-extract-plugin": "^2.7.5",
     "prettier": "^3.2.5",

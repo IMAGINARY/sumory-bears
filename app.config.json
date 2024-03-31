@@ -19,7 +19,7 @@
       "context": "node_modules/bootstrap/dist/"
     },
     {
-      "from": "matter.min.*",
+      "from": "matter.alpha.min.*",
       "to": "../vendor/matter/",
       "context": "node_modules/matter-js/build/"
     },
@@ -38,7 +38,7 @@
     "vendor/jquery/jquery.min.js",
     "vendor/bootstrap/js/bootstrap.bundle.min.js",
     "vendor/bootstrap/css/bootstrap.min.css",
-    "vendor/matter/matter.min.js",
+    "vendor/matter/matter.alpha.min.js",
     "vendor/matter-tools/matter-tools.min.js"
   ]
 }

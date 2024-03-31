@@ -3,7 +3,7 @@ ramp:
 box:
   inX: 1740
   outX: 2050
-  topSpeed: 6
+  topSpeed: 4
 bears:
   width: 12
   height: 24

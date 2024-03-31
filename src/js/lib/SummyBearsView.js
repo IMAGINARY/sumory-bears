@@ -49,6 +49,7 @@ class SummyBearsView {
         timeScale: this.config.matter.engineTimescale,
       },
     });
+    this.engine.gravity.scale *= this.config.matter.gravityFactor;
     this.render = Matter.Render.create({
       element: this.$matterContainer[0],
       engine: this.engine,
@@ -74,7 +75,6 @@ class SummyBearsView {
     Matter.Render.run(this.render);
     this.runner = Matter.Runner.create({
       delta: this.config.matter.runnerDelta,
-      isFixed: this.config.matter.runnerIsFixed,
     });
     Matter.Runner.run(this.runner, this.engine);
 
