@@ -27,6 +27,7 @@ class SummyBearsApp {
     });
 
     this.view.events.on('lever-pull', this.handleLeverPull.bind(this));
+    this.view.events.on('bears-expelled', this.handleBearsExpelled.bind(this));
     this.view.events.on(
       'bear-process-done',
       this.handleBearProcessDone.bind(this)
@@ -55,14 +56,15 @@ class SummyBearsApp {
     this.view.showLeverText(leverIndex, bears);
     this.view.showPullsLeft(this.game.getPullsLeft());
     if (this.game.isGameOver()) {
-      this.handleGameOver();
+      this.clearIdleTimer();
+      this.view.disableLevers();
     }
   }
 
-  handleGameOver() {
-    this.clearIdleTimer();
-    this.view.disableLevers();
-    this.view.queueBearProcessing();
+  handleBearsExpelled() {
+    if (this.game.isGameOver()) {
+      this.view.queueBearProcessing();
+    }
   }
 
   handleBearProcessDone() {
@@ -80,9 +82,7 @@ class SummyBearsApp {
   }
 
   resetIdleTimer() {
-    if (this.idleTimer) {
-      clearTimeout(this.idleTimer);
-    }
+    this.clearIdleTimer();
 
     const delay = this.game.isGameOver()
       ? this.config.app.autoRestartTimeout

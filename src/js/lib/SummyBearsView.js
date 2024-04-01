@@ -292,6 +292,7 @@ class SummyBearsView {
       this.addBears(chuteNumber, count);
       setTimeout(() => {
         this.chuteViews[chuteNumber - 1].$element.removeClass('expelling');
+        this.events.emit('bears-expelled', chuteNumber, count);
       }, animationDuration - expelDelay);
     }, expelDelay);
   }
