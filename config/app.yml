@@ -1,11 +1,24 @@
 app:
-  leverResetDelay: 0
+  # Duration of the animation of the chute expelling bears (in milliseconds).
   bearExpelAnimationDuration: 800
-  # bearExpelDelay must be lower than bearExpelAnimationDuration
+  # Delay, within the bear expelling animation, until the bears are actually added
+  # to the world (in milliseconds).
+  # NOTE: It must be lower than bearExpelAnimationDuration
   bearExpelDelay: 400
+  # Extra delay for the lever to be reset (go back up) after the bear expel animation
+  # (in milliseconds). Negative values cause issues.
+  leverResetDelay: 0
+  # Time it takes for the box to go off-screen and come back empty (in milliseconds).
   boxDispatchDelay: 2000
+  # Timeout, when the final bears drop, before the box leaves even if there are still bears
+  # falling on the ramp (because bears can get stuck or fall very slowly in some cases)
+  # (in milliseconds).
   bearProcessingQueueTimeout: 5000
+  # Timeout to auto-restart the game once the game ends and the final score is shown
+  # (in milliseconds).
   autoRestartTimeout: 15000
+  # Timeout to auto-restart the game if no input is received (in milliseconds).
   idleRestartTimeout: 30000
+  # Languages to show on screen (in order of apparition).
   languages: ['de', 'en']
 

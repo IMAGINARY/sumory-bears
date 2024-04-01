@@ -1,3 +1,5 @@
 game:
+  # The bear numbers that are shuffled and assigned to the chutes
   values: [ 1, 1, 2, 3, 5, 7, 9, 15, 25 ]
+  # How many lever pulls are allowed per game
   pullsPerGame: 9

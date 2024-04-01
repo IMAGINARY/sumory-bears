@@ -1,10 +1,17 @@
 ramp:
+  # The angle of the ramp in degrees. The ramp is not rendered by matter.js, so after
+  # changing this number, the graphics should be adapted to match.
   angle: 8
 box:
+  # x position of the box when it's visible on the screen
   inX: 1740
+  # x position to which the box leaves when it goes off screen
   outX: 2050
+  # maximum speed the box takes. Beware, changing this paramter might cause collision
+  # detection against the box edges to fail, causing bears to go through the box side.
   topSpeed: 4
 bears:
+  # The properties below affect the physics of the bears
   width: 12
   height: 24
   airFriction: 0.01
@@ -14,6 +21,7 @@ bears:
   restitution: 0.4
   slop: 0.2
 chutes:
+  # These properties control the number of chutes and their positioning
   count: 9
   width: 60
   height: 200 # min on-screen height

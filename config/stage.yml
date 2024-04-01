@@ -1,4 +1,7 @@
 stage:
+  # Dimensions of the stage (passed to matter.js)
   width: 1920
   height: 1080
+  # The margin around the stage that is considered off-stage.
+  # Off-stage objects are removed from the stage
   offStageMargin: 500

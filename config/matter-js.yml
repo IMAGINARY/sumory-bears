@@ -1,8 +1,21 @@
 matter:
+  # Show bodies as wireframes
   wireframes: false
+  # Show bodies as transparent
   transparentBodies: true
-  runnerDelta: 16.666666666666668 # 1000/30
+  # The fixed timestep size used for `Engine.update` calls in milliseconds.
+  # Ideally it should be 1000/60, and an integer multiple of the fps.
+  # See matter.js documentation (runner.delta) for more information.
+  runnerDelta: 16.666666666666668 # 1000/60
+  # A Number that specifies the global scaling factor of time for all bodies. A value of 0 freezes
+  # the simulation. A value of 0.1 gives a slow-motion effect. A value of 1.2 gives a speed-up
+  # effect. See matter.js documentation (engine.timing.timescale) for more information
   engineTimescale: 1
+  # A factor applied to engine.gravity.scale, which determines the magnitude of the gravitational
+  # acceleration
   gravityFactor: 2.5
+  # Enable sleeping in the matter.js engine (see engine.enableSleeping in the matter.js
+  # documentation)
   enableSleeping: false
+  # Show the performance monitor in the top left corner
   showPerformance: false
